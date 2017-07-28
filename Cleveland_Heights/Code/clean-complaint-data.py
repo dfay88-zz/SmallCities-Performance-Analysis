@@ -5,7 +5,7 @@ import numpy as np
 import os
 
 complaints = pd.read_excel('../Data/Raw/Access_CH.xlsx')
-geocodes = pd.read_excel('../Data/Raw/AccessCH_geocodes.xlsx')
+geocodes = pd.read_excel('../Data/Interim/AccessCH_geocodes.xlsx')
 
 complaints_gc = pd.merge(complaints, geocodes, how='left', left_on='Address', right_on='address')
 complaints_gc.drop_duplicates(['Description', 'Address', 'Date Created'], inplace=True)

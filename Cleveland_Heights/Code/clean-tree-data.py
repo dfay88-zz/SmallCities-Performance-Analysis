@@ -6,7 +6,7 @@ from shapely.geometry import Point
 from sklearn import preprocessing
 
 trees = pd.read_excel('../Data/Raw/Treetracker Site Table.xlsx')
-owners = gpd.read_file('../Data/Raw/Master_Building/CH_Only_Clip.shp')
+owners = gpd.read_file('../Data/Interim/Master_Building/CH_Only_Clip.shp')
 
 trees = trees[['Address', 'Diameter', 'Condition Wood', 'Condition Leaves', 'X_Coord', 'Y_Coord']]
 trees.dropna(inplace=True)
@@ -16,7 +16,7 @@ trees['Condition Wood'] = trees['Condition Wood'].map(conditions)
 trees['Condition Leaves'] = trees['Condition Leaves'].map(conditions)
 min_max_scaler = preprocessing.MinMaxScaler((0, 4))
 trees['Diameter'] = min_max_scaler.fit_transform(np.array(trees['Diameter'].astype(float)).reshape(-1, 1))
-trees['Tree_Score'] = trees['Diameter'] + trees['Condition Wood'] + trees['Condition Leaves']
+trees['Tree_Score'] = 2*(trees['Diameter']) + trees['Condition Wood'] + trees['Condition Leaves']
 
 tree_scores = trees[['Address', 'Tree_Score']].groupby('Address').mean()
 

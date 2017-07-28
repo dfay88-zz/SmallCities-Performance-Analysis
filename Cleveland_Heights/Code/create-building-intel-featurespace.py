@@ -5,7 +5,7 @@ import geopandas as gpd
 foreclosures = gpd.read_file('../Data/processed/shapefiles/FC_count.shp')
 police = gpd.read_file('../Data/processed/shapefiles/PD_count.shp')
 complaints = gpd.read_file('../Data/processed/shapefiles/complaint_count.shp')
-owners = gpd.read_file('../Data/Raw/Master_Building/CH_Only_Clip.shp')
+owners = gpd.read_file('../Data/Interim/Master_Building/CH_Only_Clip.shp')
 code_enforcement = gpd.read_file('../Data/processed/shapefiles/viol_agg_final_shp.shp')
 tree_scores = pd.read_csv('../Data/processed/tree_scores.csv')
 building_permits = pd.read_csv('../Data/processed/bldg_permits_agg.csv')
@@ -92,5 +92,6 @@ featureSpace = pd.merge(featureSpace, building_permits, how='left', left_on='PAR
 featureSpace.drop('parcelID', axis=1, inplace=True)
 featureSpace[['FC_count', 'PD_count', 'own_occup', 'Comp_count', 'NegAct_count', 'perm_num']] = featureSpace[['FC_count', 'PD_count', 'own_occup',
                                                                                                              'Comp_count', 'NegAct_count', 'perm_num']].fillna(value=0)
+featureSpace.drop('sold_date', axis=1, inplace=True)
 featureSpace_shp = gpd.GeoDataFrame(featureSpace, crs={'init': 'epsg:4326'})
 featureSpace_shp.to_file('../Data/processed/shapefiles/featureSpace.shp')
