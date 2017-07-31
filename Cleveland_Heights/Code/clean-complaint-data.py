@@ -2,7 +2,6 @@ import pandas as pd
 import geopandas as gpd
 from shapely.geometry import Point
 import numpy as np
-import os
 
 complaints = pd.read_excel('../Data/Raw/Access_CH.xlsx')
 geocodes = pd.read_excel('../Data/Interim/AccessCH_geocodes.xlsx')
@@ -13,7 +12,7 @@ complaints_gc.drop('address', axis=1, inplace=True)
 
 complaints_count = complaints_gc.groupby('Address').count()
 complaints_count = complaints_count[['Description']]
-complaints_count.columns = ['Complaint_count']
+complaints_count.columns = ['Comp_count']
 complaints_count.to_csv('../Data/processed/complaint_count.csv', encoding='utf-8')
 
 complaints_count.reset_index(inplace=True)

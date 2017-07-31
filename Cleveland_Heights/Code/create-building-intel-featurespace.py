@@ -52,12 +52,12 @@ complaints['Address'] = map(lambda x: x.upper(), complaints['Address'])
 featureSpace = gpd.sjoin(featureSpace, complaints, how='left', op='intersects')
 featureSpace.drop(['Address', 'index_right'], axis=1, inplace=True)
 
-counts = featureSpace[['parcel_add', 'PARCELPIN', 'Complaint_']]
+counts = featureSpace[['parcel_add', 'PARCELPIN', 'Comp_count']]
 counts = counts.groupby(['parcel_add', 'PARCELPIN']).sum()
 counts.reset_index(inplace=True)
-featureSpace.drop(['Complaint_'], axis=1, inplace=True)
+featureSpace.drop(['Comp_count'], axis=1, inplace=True)
 featureSpace.drop_duplicates(['parcel_add', 'PARCELPIN'], inplace=True)
-featureSpace['Comp_count'] = counts.Complaint_
+featureSpace['Comp_count'] = counts.Comp_count
 
 
 # Code Enforcement

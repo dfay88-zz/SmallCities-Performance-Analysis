@@ -41,6 +41,20 @@ policeData = policeData.append(policeData_15)
 policeData = policeData.append(policeData_14)
 policeData = policeData.append(policeData_13)
 
+owners = gpd.read_file('../Data/Interim/Master_Building/CH_Only_Clip.shp')
+owners = owners[['PARCEL_ID', 'parcel_add', 'geometry']]
+
+policeData = pd.merge(policeData, geocodes, how='inner', left_on='address1', right_on='address')
+
+policeData['latitude'] = [float(str(row['coordinate']).split(',')[0][1:]) for ix, row in policeData.iterrows()]
+policeData['longitude'] = [float(str(row['coordinate']).split(',')[1][1:-1]) for ix, row in policeData.iterrows()]
+geometry = gpd.GeoSeries([Point(xy) for xy in zip(policeData.longitude, policeData.latitude)])
+policeData = gpd.GeoDataFrame(policeData, geometry=geometry)
+policeData.crs = {'init': 'epsg:4326'}
+
+policeData = gpd.sjoin(policeData, owners, how='inner', op='intersects')
+policeData.drop(['address', 'latitude', 'longitude', 'coordinate', 'parcel_add', 'index_right'], axis=1, inplace=True)
+
 policeData.to_csv('../Data/Interim/police_data/police_data_13_17.csv')
 
 policeData_count = policeData.groupby('address1').count()
